@@ -2,8 +2,8 @@
   "name": "pocket-cli",
   "private": true,
   "scripts": {
-    "start": "yarn dev-web && yarn dev-server",
-    "start-server": "yarn build-web && node ./dist/server/app.js",
+    "start": "yarn dev-server & yarn dev-web",
+    "start-server": "yarn build-server && node ./dist/server/app.js",
     "dev-web": "vite",
     "dev-server": "nodemon --ext ts --exec yarn start-server",
     "build-web": "vite build",
