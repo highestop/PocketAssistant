@@ -1,11 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vite/client"],
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "jsx": "react-jsxdev"
+    "module": "ESNext"
   },
-  "include": ["./web"]
+  "include": ["./app"]
 }

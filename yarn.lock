@@ -499,7 +499,14 @@
   resolved "http://npm.zhenguanyu.com/@types/range-parser/download/@types/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
   integrity sha1-fuMwunyq+5gJC+zoal7kQRWQTCw=
 
-"@types/react@^17.0.2":
+"@types/react-dom@^17.0.1":
+  version "17.0.1"
+  resolved "http://npm.zhenguanyu.com/@types/react-dom/download/@types/react-dom-17.0.1.tgz#d92d77d020bfb083e07cc8e0ac9f933599a4d56a"
+  integrity sha1-2S130CC/sIPgfMjgrJ+TNZmk1Wo=
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*", "@types/react@^17.0.2":
   version "17.0.2"
   resolved "http://npm.zhenguanyu.com/@types/react/download/@types/react-17.0.2.tgz#3de24c4efef902dd9795a49c75f760cbe4f7a5a8"
   integrity sha1-PeJMTv75At2XlaScdfdgy+T3pag=
@@ -982,7 +989,7 @@ cookie@0.4.0:
   resolved "http://npm.zhenguanyu.com/cookie/download/cookie-0.4.0.tgz#beb437e7022b3b6d49019d088665303ebe9c14ba"
   integrity sha1-vrQ35wIrO21JAZ0IhmUwPr6cFLo=
 
-copy-to-clipboard@^3.2.0:
+copy-to-clipboard@^3.2.0, copy-to-clipboard@^3.3.1:
   version "3.3.1"
   resolved "http://npm.zhenguanyu.com/copy-to-clipboard/download/copy-to-clipboard-3.3.1.tgz#115aa1a9998ffab6196f93076ad6da3b913662ae"
   integrity sha1-EVqhqZmP+rYZb5MHatbaO5E2Yq4=
