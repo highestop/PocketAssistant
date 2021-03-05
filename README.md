@@ -9,23 +9,20 @@
 
 ## 功能支持
 
-- 获取最近 3 天的未读项目
-- 获取最近 7 天的已读项目
-- 获取所有收藏项目
-- 获取某个标签下的所有项目，标签自行输入
+- 按是否收藏搜索文章
+- 按阅读状态搜索文章
+- 按标签搜索文章
+- 列出文章详情
+- 在控制台输出可直接复制的文章 Markdown List
 
-## 服务接口列表
+## 待优化
 
-- `getRequestToken` / `getAccountCode`
-- `getAccessToken`
-- `getRecentUnread`
-- `getRecentArchived`
-- `getFavourite`
-- `getByTag`
+- 统一接口数据定义，更好的代码结构
+- 支持 localStorage 缓存 token，避免频繁重复验证
 
-## 特别提示
+## 帮助
 
-- 每次运行项目都是一次全新的匿名登录环境，初次载入后需要前端操作跳转 Pocket 授权登录后，方可使用。如停止服务，下次启动需要重新授权
+- 调试时，每次运行项目都是一次全新的匿名登录环境，初次载入后需要前端操作跳转 Pocket 授权登录后，方可使用。如停止服务，下次启动需要重新授权
 
 > - https://getpocket.com/developer/docs/overview
 > - https://getpocket.com/developer/apps/new
