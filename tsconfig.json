@@ -5,10 +5,12 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": ["vite/client"],
     "jsx": "react-jsxdev"
-  }
+  },
+  "include": ["./app"]
 }
