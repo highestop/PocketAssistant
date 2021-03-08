@@ -3,7 +3,7 @@ import './polyfill';
 import 'antd/dist/antd.css';
 import * as ReactDOM from 'react-dom';
 import axios, { AxiosRequestConfig } from 'axios';
-import { useCallback, useReducer } from 'react';
+import { useCallback, useEffect, useReducer } from 'react';
 import { consumer_key } from '../profile.json';
 import {
   Layout,
@@ -41,6 +41,7 @@ const App = () => {
     },
     {
       consumer_key,
+      access_token: localStorage.getItem('access_token') ?? undefined,
       allList: [],
     }
   );
@@ -63,11 +64,12 @@ const App = () => {
   const fetchAccessToken = useCallback(() => {
     fetch<{
       access_token: string;
-    }>('/oauth-authorize').then(({ data }) =>
+    }>('/oauth-authorize').then(({ data }) => {
       updateStore({
         access_token: data.access_token,
-      })
-    );
+      });
+      localStorage.setItem('access_token', data.access_token);
+    });
   }, []);
 
   const retrieve = useCallback(() => {
@@ -128,7 +130,13 @@ const App = () => {
             )}
           </Form.Item>
         </Form>
-        <Form form={form}>
+        <Form
+          form={form}
+          initialValues={{
+            tag: '2021.3',
+            state: 'archive',
+          }}
+        >
           <Form.Item label="Tag" name="tag">
             <Input style={{ width: '200px' }}></Input>
           </Form.Item>
