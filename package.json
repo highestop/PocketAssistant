@@ -6,6 +6,7 @@
     "start-server": "yarn build-server && node ./dist/server/main.js",
     "dev-app": "vite",
     "dev-server": "nodemon --ext ts --exec yarn start-server",
+    "build": "yarn build-server & yarn build-app",
     "build-app": "vite build",
     "build-server": "tsc -p tsconfig.server.json"
   },

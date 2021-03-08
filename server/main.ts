@@ -1,36 +1,6 @@
 import express from 'express';
 import axios from 'axios';
-
-const app = express();
-
-app.all('*', (_, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
-  res.header('Content-Type', 'application/json;charset=utf-8');
-  next();
-});
-
-app.listen(3001, () => {
-  console.log(`Server starts at http://localhost:3001`);
-});
-
-function printLog(log: any) {
-  console.log(`>>> ${log}`);
-}
-
-function appendParams(obj: { [key: string]: any }) {
-  let str = '';
-  Object.keys(obj).forEach(key => {
-    if (obj[key] != null) {
-      str = `${str}&${key}=${obj[key]}`;
-    }
-  });
-  if (!str) {
-    return null;
-  }
-  return str;
-}
+import { PocketRetrieveItem, PocketRetrieveQuery } from './model';
 
 const enum ResponseStatus {
   DONE = 'success',
@@ -53,9 +23,24 @@ class ResponseData {
   }
 }
 
-app.get('/hello', (_, res) => {
-  res.json(new ResponseData({ message: 'hello' }));
-});
+function printLog(log: any) {
+  console.log(`>>> ${log}`);
+}
+
+function appendParams(obj: { [key: string]: any }) {
+  let str = '';
+  Object.keys(obj).forEach(key => {
+    if (obj[key] != null) {
+      str = `${str}&${key}=${obj[key]}`;
+    }
+  });
+  if (!str) {
+    return null;
+  }
+  return str;
+}
+
+const app = express();
 
 const pocket_uri = 'https://getpocket.com';
 
@@ -65,6 +50,22 @@ const headers = {
     'X-Accept': 'application/json',
   },
 };
+
+app.all('*', (_, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+  res.header('Access-Control-Allow-Methods', 'PUT,POST,GET,DELETE,OPTIONS');
+  res.header('Content-Type', 'application/json;charset=utf-8');
+  next();
+});
+
+app.listen(3001, () => {
+  console.log(`Server starts at http://localhost:3001`);
+});
+
+app.get('/hello', (_, res) => {
+  res.json(new ResponseData({ message: 'hello' }));
+});
 
 let consumer_key: string;
 
@@ -130,15 +131,7 @@ app.get('/oauth-authorize', (_, res, next) => {
  * 搜索项目
  */
 app.get('/retrieve', (req, res, next) => {
-  const params: {
-    readonly state?: 'unread' | 'archive' | 'all';
-    readonly fav?: 0 | 1;
-    readonly tag?: string;
-    readonly search?: string;
-    readonly domain?: string;
-    readonly count?: number;
-    readonly since?: number;
-  } = req.query;
+  const params: PocketRetrieveQuery = req.query;
   const paramStr = appendParams(params) ?? '$count=20'; // 没有任何搜索条件时，默认返回 20 条
   const url = `https://getpocket.com/v3/get?consumer_key=${consumer_key}&access_token=${access_token}${paramStr}&sort=newest`; // 默认从新到旧
   printLog(url);
@@ -149,14 +142,7 @@ app.get('/retrieve', (req, res, next) => {
         list,
       }: {
         list: {
-          [key: string]: {
-            resolved_url: string; // The final url of the item
-            resolved_title: string; // The title that Pocket found for the item when it was parsed
-            excerpt: string; // The first few lines of the item (articles only)
-            favorite: 0 | 1; // 1 If the item is favorited
-            status: 0 | 1 | 2; // 1 if the item is archived - 2 if the item should be deleted
-            word_count: number;
-          };
+          [key: string]: PocketRetrieveItem;
         };
       } = body.data;
       printLog(list);

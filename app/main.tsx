@@ -3,7 +3,7 @@ import './polyfill';
 import 'antd/dist/antd.css';
 import * as ReactDOM from 'react-dom';
 import axios, { AxiosRequestConfig } from 'axios';
-import { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useReducer } from 'react';
 import { consumer_key } from '../profile.json';
 import {
   Layout,
@@ -11,25 +11,16 @@ import {
   Form,
   Tag,
   Typography,
-  Spin,
   Radio,
   Input,
   Button,
   Space,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
+import { PocketRetrieveItem } from '../server/model';
 
 function fetch<T>(url: string, options?: AxiosRequestConfig) {
   return axios.get<T>(`http://localhost:3001${url}`, options);
-}
-
-interface DataItem {
-  resolved_url: string;
-  resolved_title: string;
-  excerpt: string;
-  favorite: 0 | 1;
-  status: 0 | 1 | 2;
-  word_count: number;
 }
 
 interface DataStore {
@@ -37,7 +28,7 @@ interface DataStore {
   readonly request_token?: string;
   readonly authorize_url?: string;
   readonly access_token?: string;
-  readonly allList: DataItem[];
+  readonly allList: PocketRetrieveItem[];
 }
 
 const App = () => {
@@ -80,7 +71,7 @@ const App = () => {
   }, []);
 
   const retrieve = useCallback(() => {
-    fetch<{ list: DataItem[] }>('/retrieve', {
+    fetch<{ list: PocketRetrieveItem[] }>('/retrieve', {
       params: form.getFieldsValue(),
     }).then(({ data }) => {
       updateStore({ allList: data.list });
