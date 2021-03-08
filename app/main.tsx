@@ -1,5 +1,6 @@
 // 注意，polyfill 必须放在顶部
 import './polyfill';
+import './main.css';
 import 'antd/dist/antd.css';
 import * as ReactDOM from 'react-dom';
 import axios, { AxiosRequestConfig } from 'axios';
