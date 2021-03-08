@@ -3,7 +3,7 @@ import './polyfill';
 import 'antd/dist/antd.css';
 import * as ReactDOM from 'react-dom';
 import axios, { AxiosRequestConfig } from 'axios';
-import { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useReducer } from 'react';
 import { consumer_key } from '../profile.json';
 import {
   Layout,
@@ -15,6 +15,7 @@ import {
   Input,
   Button,
   Space,
+  Card,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { PocketRetrieveItem } from '../server/model';
@@ -92,102 +93,114 @@ const App = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Layout.Content style={{ backgroundColor: '#fff', padding: '2rem' }}>
-        <Form>
-          <Form.Item
-            label={<Typography.Text strong>Consumer Key</Typography.Text>}
-          >
-            <Typography.Text type="secondary">{consumer_key}</Typography.Text>
-          </Form.Item>
-          <Form.Item
-            label={<Typography.Text strong>Request Token</Typography.Text>}
-          >
-            {store.request_token ? (
-              <Typography.Text type="secondary">
-                {store.request_token}
-              </Typography.Text>
-            ) : (
-              <a onClick={fetchRequestToken}>Get Request Token</a>
-            )}
-            {store.access_token ? null : store.authorize_url ? (
-              <a
-                href={store.authorize_url}
-                target="blank"
-                style={{ marginLeft: '0.5rem' }}
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <Card>
+            <Form>
+              <Form.Item
+                label={<Typography.Text strong>Consumer Key</Typography.Text>}
               >
-                Go authorize
-              </a>
-            ) : null}
-          </Form.Item>
-          <Form.Item
-            label={<Typography.Text strong>Access Token</Typography.Text>}
-          >
-            {store.access_token ? (
-              <Typography.Text type="secondary">
-                {store.access_token}
-              </Typography.Text>
-            ) : (
-              <a onClick={fetchAccessToken}>Get Access Token</a>
-            )}
-          </Form.Item>
-        </Form>
-        <Form
-          form={form}
-          initialValues={{
-            tag: '2021.3',
-            state: 'archive',
-          }}
-        >
-          <Form.Item label="Tag" name="tag">
-            <Input style={{ width: '200px' }}></Input>
-          </Form.Item>
-          <Form.Item label="State" name="state">
-            <Radio.Group>
-              <Radio value="unread">Unread</Radio>
-              <Radio value="archive">Archived</Radio>
-              <Radio value="all">All</Radio>
-              <Radio value={undefined}>-</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Favorite" name="fav">
-            <Radio.Group>
-              <Radio value={1}>Favorite</Radio>
-              <Radio value={0}>All</Radio>
-              <Radio value={undefined}>-</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Space>
-            <Button type="primary" onClick={retrieve}>
-              Search
-            </Button>
-            <Button onClick={clear}>Clear</Button>
-          </Space>
-        </Form>
-        <List
-          dataSource={store.allList}
-          renderItem={item => (
-            <List.Item>
-              <List.Item.Meta
-                title={
-                  <>
-                    <a href={item.resolved_url} target="blank">
-                      {item.resolved_title}
-                    </a>
-                    {item.favorite > 0 ? (
-                      <Tag color="orange">Favorite</Tag>
-                    ) : null}
-                    {item.status === 1 ? (
-                      <Tag color="purple">Archived</Tag>
-                    ) : null}
-                    {item.status === 2 ? (
-                      <Tag color="default">Should be deleted</Tag>
-                    ) : null}
-                  </>
-                }
-                description={item.excerpt}
-              />
-            </List.Item>
-          )}
-        ></List>
+                <Typography.Text type="secondary">
+                  {consumer_key}
+                </Typography.Text>
+              </Form.Item>
+              <Form.Item
+                label={<Typography.Text strong>Request Token</Typography.Text>}
+              >
+                {store.request_token ? (
+                  <Typography.Text type="secondary">
+                    {store.request_token}
+                  </Typography.Text>
+                ) : (
+                  <a onClick={fetchRequestToken}>Get Request Token</a>
+                )}
+                {store.access_token ? null : store.authorize_url ? (
+                  <a
+                    href={store.authorize_url}
+                    target="blank"
+                    style={{ marginLeft: '0.5rem' }}
+                  >
+                    Go authorize
+                  </a>
+                ) : null}
+              </Form.Item>
+              <Form.Item
+                label={<Typography.Text strong>Access Token</Typography.Text>}
+              >
+                {store.access_token ? (
+                  <Typography.Text type="secondary">
+                    {store.access_token}
+                  </Typography.Text>
+                ) : (
+                  <a onClick={fetchAccessToken}>Get Access Token</a>
+                )}
+              </Form.Item>
+            </Form>
+          </Card>
+          <Card>
+            <Form
+              form={form}
+              initialValues={{
+                tag: '2021.3',
+                state: 'archive',
+              }}
+            >
+              <Form.Item label="Tag" name="tag">
+                <Input style={{ width: '200px' }}></Input>
+              </Form.Item>
+              <Form.Item label="State" name="state">
+                <Radio.Group>
+                  <Radio value="unread">Unread</Radio>
+                  <Radio value="archive">Archived</Radio>
+                  <Radio value="all">All</Radio>
+                  <Radio value={undefined}>-</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item label="Favorite" name="fav">
+                <Radio.Group>
+                  <Radio value={1}>Favorite</Radio>
+                  <Radio value={0}>All</Radio>
+                  <Radio value={undefined}>-</Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item>
+                <Space>
+                  <Button type="primary" onClick={retrieve}>
+                    搜索
+                  </Button>
+                  <Button onClick={clear}>清空</Button>
+                </Space>
+              </Form.Item>
+            </Form>
+          </Card>
+          <Card>
+            <List
+              dataSource={store.allList}
+              renderItem={item => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={
+                      <>
+                        <a href={item.resolved_url} target="blank">
+                          {item.resolved_title}
+                        </a>
+                        {item.favorite > 0 ? (
+                          <Tag color="orange">Favorite</Tag>
+                        ) : null}
+                        {item.status === 1 ? (
+                          <Tag color="purple">Archived</Tag>
+                        ) : null}
+                        {item.status === 2 ? (
+                          <Tag color="default">Should be deleted</Tag>
+                        ) : null}
+                      </>
+                    }
+                    description={item.excerpt}
+                  />
+                </List.Item>
+              )}
+            ></List>
+          </Card>
+        </Space>
       </Layout.Content>
       <Layout.Footer style={{ textAlign: 'center', color: 'grey' }}>
         ©Copyright by Highestop
