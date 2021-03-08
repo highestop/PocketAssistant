@@ -17,7 +17,6 @@
 
 ## 待优化
 
-- 支持 localStorage 缓存 token，避免频繁重复验证
 - 页面支持 loading 状态提示，交互更友好
 
 ## 帮助

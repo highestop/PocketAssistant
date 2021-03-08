@@ -42,7 +42,6 @@ const App = () => {
     },
     {
       consumer_key,
-      access_token: localStorage.getItem('access_token') ?? undefined,
       allList: [],
     }
   );
@@ -69,7 +68,6 @@ const App = () => {
       updateStore({
         access_token: data.access_token,
       });
-      localStorage.setItem('access_token', data.access_token);
     });
   }, []);
 
