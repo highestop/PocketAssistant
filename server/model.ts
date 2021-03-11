@@ -8,6 +8,11 @@ export interface PocketRetrieveQuery {
   readonly since?: number;
 }
 
+export interface PocketAccessQuery {
+  readonly consumer_key?: string;
+  readonly access_token?: string;
+}
+
 export interface PocketRetrieveItem {
   resolved_url: string; // The final url of the item
   resolved_title: string; // The title that Pocket found for the item when it was parsed

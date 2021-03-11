@@ -1,6 +1,10 @@
 import express from 'express';
 import axios from 'axios';
-import { PocketRetrieveItem, PocketRetrieveQuery } from './model';
+import {
+  PocketRetrieveItem,
+  PocketRetrieveQuery,
+  PocketAccessQuery,
+} from './model';
 
 const enum ResponseStatus {
   DONE = 'success',
@@ -23,8 +27,8 @@ class ResponseData {
   }
 }
 
-function printLog(log: any) {
-  console.log(`>>> ${log}`);
+function printLog(...log: any) {
+  console.log(`>>>`, ...log);
 }
 
 function appendParams(obj: { [key: string]: any }) {
@@ -67,12 +71,6 @@ app.get('/hello', (_, res) => {
   res.json(new ResponseData({ message: 'hello' }));
 });
 
-let consumer_key: string;
-
-let request_token: string | null = null;
-
-let access_token: string | null = null;
-
 /**
  * 根据申请 app 的 consumer_key 进行模拟授权，得到 account 的 request_token
  * 此时要根据 request_token 访问 activateRequestToken 返回的地址，在页面上点击授权，才算可用
@@ -80,19 +78,14 @@ let access_token: string | null = null;
  * 记住一个用户的 request_token 相当于记住一个账号，尽管是匿名的，不影响使用
  */
 app.get('/oauth-request', (req, res, next) => {
-  const { key } = req.query;
-  if (typeof key === 'string') {
-    consumer_key = key;
-  } else {
-    next(new Error(`'consumer_key' 参数的类型不正确`));
-  }
+  const { consumer_key } = req.query;
   const url = `https://getpocket.com/v3/oauth/request?consumer_key=${consumer_key}&redirect_uri=${pocket_uri}`;
   printLog(url);
   axios
     .post(url, null, headers)
     .then(body => {
-      request_token = body.data.code;
-      printLog(request_token);
+      const request_token = body.data.code;
+      printLog('request_token received:', request_token);
       res.json({
         consumer_key,
         request_token,
@@ -110,14 +103,15 @@ app.get('/oauth-request', (req, res, next) => {
  * 最终由 access_token 配合 consumer_key 发送命令
  * access_token 假装允许了对该 request_token 的授权，所以请谨慎保管
  */
-app.get('/oauth-authorize', (_, res, next) => {
+app.get('/oauth-authorize', (req, res, next) => {
+  const { consumer_key, request_token } = req.query;
   const url = `https://getpocket.com/v3/oauth/authorize?consumer_key=${consumer_key}&code=${request_token}`;
   printLog(url);
   axios
     .post(url, null, headers)
     .then(body => {
-      access_token = body.data.access_token;
-      printLog(access_token);
+      const access_token = body.data.access_token;
+      printLog('access_token received:', access_token);
       res.json({ access_token });
     })
     .catch(() =>
@@ -131,9 +125,9 @@ app.get('/oauth-authorize', (_, res, next) => {
  * 搜索项目
  */
 app.get('/retrieve', (req, res, next) => {
-  const params: PocketRetrieveQuery = req.query;
+  const params: PocketRetrieveQuery & PocketAccessQuery = req.query;
   const paramStr = appendParams(params) ?? '$count=20'; // 没有任何搜索条件时，默认返回 20 条
-  const url = `https://getpocket.com/v3/get?consumer_key=${consumer_key}&access_token=${access_token}${paramStr}&sort=newest`; // 默认从新到旧
+  const url = `https://getpocket.com/v3/get?${paramStr}&sort=newest`; // 默认从新到旧
   printLog(url);
   axios
     .post(url, null, headers)
@@ -145,7 +139,7 @@ app.get('/retrieve', (req, res, next) => {
           [key: string]: PocketRetrieveItem;
         };
       } = body.data;
-      printLog(list);
+      printLog('items retrieved:', list);
       res.json({ list: Object.keys(list).map(id => list[id]) });
     })
     .catch(err =>
