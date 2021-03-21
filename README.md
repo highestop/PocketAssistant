@@ -1,4 +1,4 @@
-# Pocket CLI
+# Quickly Pocket
 
 > 仅绑定了个人 Pocket 帐号，并只开通了只读通道
 
