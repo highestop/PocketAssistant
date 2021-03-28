@@ -189,7 +189,7 @@ const App = () => {
             <Form
               form={form}
               initialValues={{
-                tag: '2021.3',
+                tag: 'committed',
                 state: 'archive',
               }}
             >
