@@ -120,7 +120,7 @@ const App = () => {
       updateStore({ allList: data.list });
       console.warn(
         data.list
-          .map(item => `- [${item.resolved_title}](${item.resolved_url})`)
+          .map(item => `- [${item.resolved_title}](${item.given_url})`)
           .join('\n')
       );
     });
@@ -189,27 +189,39 @@ const App = () => {
             <Form
               form={form}
               initialValues={{
-                tag: 'committed',
+                tag: '2021.3',
                 state: 'archive',
               }}
             >
-              <Form.Item label="Tag" name="tag">
-                <Input style={{ width: '200px' }}></Input>
+              <Form.Item
+                label={<Typography.Text strong>标签</Typography.Text>}
+                name="tag"
+              >
+                <Input style={{ width: '120px' }}></Input>
               </Form.Item>
-              <Form.Item label="State" name="state">
+              <Form.Item
+                label={<Typography.Text strong>状态</Typography.Text>}
+                name="state"
+              >
                 <Radio.Group>
-                  <Radio value="unread">Unread</Radio>
-                  <Radio value="archive">Archived</Radio>
-                  <Radio value="all">All</Radio>
-                  <Radio value={undefined}>-</Radio>
+                  <Radio value="unread">未读</Radio>
+                  <Radio value="archive">已归档</Radio>
+                  {/* <Radio value="all">All</Radio>
+                  <Radio value={undefined}>-</Radio> */}
                 </Radio.Group>
               </Form.Item>
-              <Form.Item label="Favorite" name="fav">
+              {/* <Form.Item label="Favorite" name="fav">
                 <Radio.Group>
                   <Radio value={1}>Favorite</Radio>
                   <Radio value={0}>All</Radio>
                   <Radio value={undefined}>-</Radio>
                 </Radio.Group>
+              </Form.Item> */}
+              <Form.Item
+                label={<Typography.Text strong>迁移到</Typography.Text>}
+                name="newTag"
+              >
+                <Input style={{ width: '120px' }}></Input>
               </Form.Item>
               <Form.Item>
                 <Space>
@@ -234,8 +246,8 @@ const App = () => {
                   <List.Item.Meta
                     title={
                       <>
-                        <a href={item.resolved_url} target="blank">
-                          {item.resolved_title || item.resolved_url}
+                        <a href={item.given_url} target="blank">
+                          {item.resolved_title || item.given_url}
                         </a>
                         {item.favorite > 0 && (
                           <Tag color="orange">Favorite</Tag>
