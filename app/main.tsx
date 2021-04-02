@@ -23,8 +23,8 @@ import {
 import { useForm } from 'antd/lib/form/Form';
 import { PocketRetrieveItem } from '../server/model';
 
-function fetch<T>(url: string, options?: AxiosRequestConfig) {
-  return axios.get<T>(`http://localhost:3001${url}`, options);
+function fetch<T>(url: string, options?: AxiosRequestConfig & { body?: any }) {
+  return axios.post<T>(`http://localhost:3001${url}`, options?.body, options);
 }
 
 interface DataStore {
@@ -115,8 +115,8 @@ const App = () => {
       params: {
         consumer_key,
         access_token: store.access_token,
-        ...form.getFieldsValue(),
       },
+      body: form.getFieldsValue(),
     }).then(({ data }) => {
       updateStore({ allList: data.list });
       console.warn(
@@ -151,7 +151,9 @@ const App = () => {
       params: {
         consumer_key,
         access_token: store.access_token,
-        ids: store.allList.map(item => item.item_id).join(','),
+      },
+      body: {
+        ids: store.allList.map(item => item.item_id),
         newTag: form.getFieldsValue()['newTag'],
       },
     }).then(() => {

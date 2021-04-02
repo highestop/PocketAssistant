@@ -420,7 +420,7 @@
   dependencies:
     axios "*"
 
-"@types/body-parser@*":
+"@types/body-parser@*", "@types/body-parser@^1.19.0":
   version "1.19.0"
   resolved "http://npm.zhenguanyu.com/@types/body-parser/download/@types/body-parser-1.19.0.tgz#0685b3c47eb3006ffed117cdd55164b61f80538f"
   integrity sha1-BoWzxH6zAG/+0RfN1VFkth+AU48=
@@ -702,7 +702,7 @@ binary-extensions@^2.0.0:
   resolved "http://npm.zhenguanyu.com/binary-extensions/download/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha1-dfUC7q+f/eQvyYgpZFvk6na9ni0=
 
-body-parser@1.19.0:
+body-parser@1.19.0, body-parser@^1.19.0:
   version "1.19.0"
   resolved "http://npm.zhenguanyu.com/body-parser/download/body-parser-1.19.0.tgz#96b2709e57c9c4e09a6fd66a8fd979844f69f08a"
   integrity sha1-lrJwnlfJxOCab9Zqj9l5hE9p8Io=
