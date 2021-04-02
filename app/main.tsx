@@ -4,7 +4,7 @@ import './main.css';
 import 'antd/dist/antd.css';
 import * as ReactDOM from 'react-dom';
 import axios, { AxiosRequestConfig } from 'axios';
-import { StrictMode, useCallback, useReducer } from 'react';
+import { useCallback, useReducer } from 'react';
 import { consumer_key } from '../profile.json';
 import {
   Layout,
@@ -18,6 +18,7 @@ import {
   Space,
   Card,
   Alert,
+  Popconfirm,
 } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import { PocketRetrieveItem } from '../server/model';
@@ -128,6 +129,41 @@ const App = () => {
 
   const clear = useCallback(() => updateStore({ allList: [] }), []);
 
+  const replace = useCallback(() => {
+    if (!consumer_key) {
+      setAlert('没有找到 consumer_key 或无效');
+      return;
+    }
+    if (!store.access_token) {
+      setAlert('没有找到 access_token 或无效');
+      return;
+    }
+    if (!store.allList.length) {
+      setAlert('没有要替换的目标项');
+      return;
+    }
+    if (!form.getFieldsValue()['newTag']) {
+      setAlert('请输入要替换的标签');
+      return;
+    }
+    const newTag = form.getFieldsValue()['newTag'];
+    fetch<void>('/replace', {
+      params: {
+        consumer_key,
+        access_token: store.access_token,
+        ids: store.allList.map(item => item.item_id).join(','),
+        newTag: form.getFieldsValue()['newTag'],
+      },
+    }).then(() => {
+      setAlert('替换成功，正在按新的标签重新获取列表');
+      form.setFieldsValue({
+        tag: newTag,
+        newTag: undefined,
+      });
+      retrieve();
+    });
+  }, [store]);
+
   const [form] = useForm();
 
   return (
@@ -218,7 +254,7 @@ const App = () => {
                 </Radio.Group>
               </Form.Item> */}
               <Form.Item
-                label={<Typography.Text strong>迁移到</Typography.Text>}
+                label={<Typography.Text strong>替换为</Typography.Text>}
                 name="newTag"
               >
                 <Input style={{ width: '120px' }}></Input>
@@ -229,6 +265,30 @@ const App = () => {
                     搜索
                   </Button>
                   <Button onClick={clear}>清空</Button>
+                  <Popconfirm
+                    title={
+                      form.getFieldsValue()['newTag']
+                        ? `确定要将 ${
+                            store.allList.length
+                          } 篇文章的标签重洗为 ${
+                            form.getFieldsValue()['newTag']
+                          }`
+                        : '请输入要替换的标签'
+                    }
+                    okText="继续"
+                    okButtonProps={{
+                      disabled: !form.getFieldsValue()['newTag'],
+                    }}
+                    cancelText={
+                      form.getFieldsValue()['newTag'] ? '再想想' : '关闭'
+                    }
+                    onConfirm={replace}
+                    disabled={!store.allList.length}
+                  >
+                    <Button danger disabled={!store.allList.length}>
+                      替换
+                    </Button>
+                  </Popconfirm>
                 </Space>
               </Form.Item>
             </Form>

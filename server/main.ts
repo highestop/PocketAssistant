@@ -123,6 +123,7 @@ app.get('/oauth-authorize', (req, res, next) => {
 
 /**
  * 搜索项目
+ * https://getpocket.com/developer/docs/v3/retrieve
  */
 app.get('/retrieve', (req, res, next) => {
   const params: PocketRetrieveQuery & PocketAccessQuery = req.query;
@@ -142,6 +143,33 @@ app.get('/retrieve', (req, res, next) => {
       printLog('items retrieved:', list);
       res.json({ list: Object.keys(list).map(id => list[id]) });
     })
+    .catch(err =>
+      next(new Error(`获取项目失败。可能没有点击授权或 APP 配置有问题\n${err}`))
+    );
+});
+
+/**
+ * 清洗标签
+ * https://getpocket.com/developer/docs/v3/modify
+ */
+app.get('/replace', (req, res, next) => {
+  const params: PocketAccessQuery = req.query;
+  const newTag = req.query.newTag;
+  const actions = (req.query.ids as string).split(',').map(id => ({
+    action: 'tags_replace',
+    item_id: id,
+    tags: newTag,
+  }));
+  const paramStr = appendParams({
+    consumer_key: params.consumer_key,
+    access_token: params.access_token,
+    actions: decodeURIComponent(JSON.stringify(actions)),
+  });
+  const url = `https://getpocket.com/v3/send?${paramStr}`;
+  printLog(url);
+  axios
+    .post(url, null, headers)
+    .then(() => res.send())
     .catch(err =>
       next(new Error(`获取项目失败。可能没有点击授权或 APP 配置有问题\n${err}`))
     );

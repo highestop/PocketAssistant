@@ -14,8 +14,9 @@ export interface PocketAccessQuery {
 }
 
 export interface PocketRetrieveItem {
-  given_url: string; // Given url of the item
-  given_title: string; // Given title of the item, empty by default
+  item_id: string; // A unique identifier matching the saved item
+  given_url: string; // The actual url that was saved with the item
+  given_title: string; // The title that was saved along with the item
   resolved_url: string; // The final url of the item
   resolved_title: string; // The title that Pocket found for the item when it was parsed
   excerpt: string; // The first few lines of the item (articles only)
