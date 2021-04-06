@@ -1,6 +1,6 @@
 # Pockety
 
-请使用时自行在根目录下添加 `profile.json` 文件如下，此文件将会被 git 忽略
+运行前请自行在根目录下添加 `profile.json` 文件如下，此文件将会被 git 忽略
 
 ```json
 {
@@ -33,6 +33,6 @@
 
 ## 参考
 
-> - https://getpocket.com/developer/docs/overview
-> - https://getpocket.com/developer/apps/new
-> - https://getpocket.com/developer/docs/errors
+- https://getpocket.com/developer/docs/overview
+- https://getpocket.com/developer/apps/new
+- https://getpocket.com/developer/docs/errors
