@@ -1,5 +1,5 @@
 {
-  "name": "pocket-cli",
+  "name": "pockety",
   "private": true,
   "scripts": {
     "start": "yarn dev-server & yarn dev-app",
