@@ -227,7 +227,7 @@ const App = () => {
             <Form
               form={form}
               initialValues={{
-                tag: '2021.3',
+                tag: '2021.6',
                 state: 'archive',
               }}
             >
