@@ -1,4 +1,4 @@
-# Pockety
+# Quick Pocket
 
 运行前请自行在根目录下添加 `profile.json` 文件如下，此文件将会被 git 忽略
 
