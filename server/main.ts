@@ -36,7 +36,7 @@ function appendParams(obj: { [key: string]: any }) {
   let str = '';
   Object.keys(obj).forEach(key => {
     if (obj[key] != null) {
-      str = `${str}&${key}=${obj[key]}`;
+      str = `${str}&${key}=${encodeURIComponent(obj[key])}`;
     }
   });
   if (!str) {

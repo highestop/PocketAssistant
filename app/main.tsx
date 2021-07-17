@@ -129,42 +129,42 @@ const App = () => {
 
   const clear = useCallback(() => updateStore({ allList: [] }), []);
 
-  const replace = useCallback(() => {
-    if (!consumer_key) {
-      setAlert('没有找到 consumer_key 或无效');
-      return;
-    }
-    if (!store.access_token) {
-      setAlert('没有找到 access_token 或无效');
-      return;
-    }
-    if (!store.allList.length) {
-      setAlert('没有要替换的目标项');
-      return;
-    }
-    if (!form.getFieldsValue()['newTag']) {
-      setAlert('请输入要替换的标签');
-      return;
-    }
-    const newTag = form.getFieldsValue()['newTag'];
-    fetch<void>('/replace', {
-      params: {
-        consumer_key,
-        access_token: store.access_token,
-      },
-      body: {
-        ids: store.allList.map(item => item.item_id),
-        newTag: form.getFieldsValue()['newTag'],
-      },
-    }).then(() => {
-      setAlert('替换成功，正在按新的标签重新获取列表');
-      form.setFieldsValue({
-        tag: newTag,
-        newTag: undefined,
-      });
-      retrieve();
-    });
-  }, [store]);
+  // const replace = useCallback(() => {
+  //   if (!consumer_key) {
+  //     setAlert('没有找到 consumer_key 或无效');
+  //     return;
+  //   }
+  //   if (!store.access_token) {
+  //     setAlert('没有找到 access_token 或无效');
+  //     return;
+  //   }
+  //   if (!store.allList.length) {
+  //     setAlert('没有要替换的目标项');
+  //     return;
+  //   }
+  //   if (!form.getFieldsValue()['newTag']) {
+  //     setAlert('请输入要替换的标签');
+  //     return;
+  //   }
+  //   const newTag = form.getFieldsValue()['newTag'];
+  //   fetch<void>('/replace', {
+  //     params: {
+  //       consumer_key,
+  //       access_token: store.access_token,
+  //     },
+  //     body: {
+  //       ids: store.allList.map(item => item.item_id),
+  //       newTag: form.getFieldsValue()['newTag'],
+  //     },
+  //   }).then(() => {
+  //     setAlert('替换成功，正在按新的标签重新获取列表');
+  //     form.setFieldsValue({
+  //       tag: newTag,
+  //       newTag: undefined,
+  //     });
+  //     retrieve();
+  //   });
+  // }, [store]);
 
   const [form] = useForm();
 
@@ -227,7 +227,7 @@ const App = () => {
             <Form
               form={form}
               initialValues={{
-                tag: '2021.6',
+                tag: '@2021.6',
                 state: 'archive',
               }}
             >
@@ -255,19 +255,19 @@ const App = () => {
                   <Radio value={undefined}>-</Radio>
                 </Radio.Group>
               </Form.Item> */}
-              <Form.Item
+              {/* <Form.Item
                 label={<Typography.Text strong>替换为</Typography.Text>}
                 name="newTag"
               >
                 <Input style={{ width: '120px' }}></Input>
-              </Form.Item>
+              </Form.Item> */}
               <Form.Item>
                 <Space>
                   <Button type="primary" onClick={retrieve}>
                     搜索
                   </Button>
                   <Button onClick={clear}>清空</Button>
-                  <Popconfirm
+                  {/* <Popconfirm
                     title={
                       form.getFieldsValue()['newTag']
                         ? `确定要将 ${
@@ -290,7 +290,7 @@ const App = () => {
                     <Button danger disabled={!store.allList.length}>
                       替换
                     </Button>
-                  </Popconfirm>
+                  </Popconfirm> */}
                 </Space>
               </Form.Item>
             </Form>
