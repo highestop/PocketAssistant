@@ -8,6 +8,8 @@
 }
 ```
 
+> App 的 Consumer Key 可以到 <https://getpocket.com/developer/apps/> 找到
+
 ## 简介
 
 本地 `yarn start` 运行服务和前端静态站点

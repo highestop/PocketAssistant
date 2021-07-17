@@ -1,6 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn build-app
-yarn build-server
 yarn pretty-quick --staged
