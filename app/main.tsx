@@ -32,6 +32,7 @@ interface DataStore {
   readonly authorize_url?: string;
   readonly access_token?: string;
   readonly allList: PocketRetrieveItem[];
+  readonly allTags?: string[];
   readonly alert?: string;
 }
 
@@ -124,6 +125,26 @@ const App = () => {
           .map(item => `- [${item.resolved_title}](${item.given_url})`)
           .join('\n')
       );
+    });
+  }, [store]);
+
+  const fetchTags = useCallback(() => {
+    if (!consumer_key) {
+      setAlert('没有找到 consumer_key 或无效');
+      return;
+    }
+    if (!store.access_token) {
+      setAlert('没有找到 access_token 或无效');
+      return;
+    }
+    fetch<string[]>('/tags', {
+      params: {
+        consumer_key,
+        access_token: store.access_token,
+      },
+    }).then(({ data }) => {
+      updateStore({ allTags: data });
+      console.warn(data);
     });
   }, [store]);
 
@@ -291,6 +312,9 @@ const App = () => {
                       替换
                     </Button>
                   </Popconfirm> */}
+                  <Button type="primary" onClick={fetchTags}>
+                    标签
+                  </Button>
                 </Space>
               </Form.Item>
             </Form>

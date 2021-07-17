@@ -32,6 +32,12 @@ function printLog(...log: any) {
   console.log(`>>>`, ...log);
 }
 
+function normalErrLog(err: string) {
+  return new Error(
+    `请求失败。可能是授权已过期，请重新授权后再试。更多错误信息：\n${err}`
+  );
+}
+
 function appendParams(obj: { [key: string]: any }) {
   let str = '';
   Object.keys(obj).forEach(key => {
@@ -128,11 +134,7 @@ app.post('/oauth-authorize', jsonParser, (req, res, next) => {
       printLog('access_token received:', access_token);
       res.json({ access_token });
     })
-    .catch(() =>
-      next(
-        new Error(`获取 'access_token' 失败。可能没有点击授权或 APP 配置有问题`)
-      )
-    );
+    .catch(err => next(normalErrLog(err)));
 });
 
 /**
@@ -146,7 +148,7 @@ app.post('/retrieve', jsonParser, (req, res, next) => {
       ...(req.query as PocketAccessQuery),
       ...(req.body as PocketRetrieveQuery),
     }) ?? '$count=20'; // 没有任何搜索条件时，默认返回 20 条
-  const url = `https://getpocket.com/v3/get?${paramStr}&sort=newest`; // 默认从新到旧
+  const url = `https://getpocket.com/v3/get?${paramStr}&sort=newest&tags=1`; // 默认从新到旧且携带标签信息
   printLog(url);
   axios
     .post(url, null, headers)
@@ -158,12 +160,9 @@ app.post('/retrieve', jsonParser, (req, res, next) => {
           [key: string]: PocketRetrieveItem;
         };
       } = body.data;
-      // printLog('items retrieved:', list);
       res.json({ list: Object.keys(list).map(id => list[id]) });
     })
-    .catch(err =>
-      next(new Error(`获取项目失败。可能没有点击授权或 APP 配置有问题\n${err}`))
-    );
+    .catch(err => next(normalErrLog(err)));
 });
 
 /**
@@ -192,7 +191,26 @@ app.post('/replace', jsonParser, (req, res, next) => {
     })
   )
     .then(() => res.send())
-    .catch(err =>
-      next(new Error(`获取项目失败。可能没有点击授权或 APP 配置有问题\n${err}`))
-    );
+    .catch(err => next(normalErrLog(err)));
+});
+
+/**
+ * 获取标签
+ */
+app.post('/tags', jsonParser, (req, res, next) => {
+  const params: PocketAccessQuery = req.query;
+  const paramStr = appendParams(params);
+  const url = `https://getpocket.com/v3/get?${paramStr}&taglist=1`;
+  printLog(url);
+  axios
+    .post(url, null, headers)
+    .then(body => {
+      const {
+        tags,
+      }: {
+        tags: string[];
+      } = body.data;
+      res.json(tags);
+    })
+    .catch(err => next(normalErrLog(err)));
 });
