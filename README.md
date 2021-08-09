@@ -1,6 +1,6 @@
 # PocketAssistant
 
-It would be helpful if you need to fetch and export Pocket data under specific conditions regularly.
+PocketAssistant helps you fetch and export Pocket data under specific conditions regularly.
 
 ## Usage
 
