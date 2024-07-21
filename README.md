@@ -1,4 +1,4 @@
-# PocketAssistant
+# PocketAssistant (Archived)
 
 PocketAssistant helps you fetch and export Pocket data under specific conditions regularly.
 
